@@ -1,29 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
 import CreatePost from "./CreatePost";
+import Login from "./Login";
+import Register from "./Register";
 
 function App() {
-  const [buttonText, setButtonText] = useState("Create Post");
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (location.pathname === "/create-post") {
-      setButtonText("Post creation");
-      setIsButtonDisabled(true);
-    } else {
-      setButtonText("Create Post");
-      setIsButtonDisabled(false);
+    const userId = localStorage.getItem("x-user-id");
+    if (!userId && location.pathname !== "/login") {
+      navigate("/login");
     }
-  }, [location]);
+  }, [location, navigate]);
 
   return (
       <div className="bg-gray-100 min-h-screen">
         {/* Верхняя панель */}
         <header className="bg-white shadow-md p-4 sticky top-0 z-50">
           <div className="container mx-auto flex justify-between items-center">
-            {/* Логотип X Clone с переходом на главную страницу */}
+            {/* Логотип X Clone */}
             <Link to="/">
               <h1 className="text-2xl font-bold text-blue-600 cursor-pointer">
                 X Clone
@@ -32,9 +29,8 @@ function App() {
             <Link to="/create-post">
               <button
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                  disabled={isButtonDisabled}
               >
-                {buttonText}
+                Create Post
               </button>
             </Link>
           </div>
@@ -53,6 +49,8 @@ function App() {
                 }
             />
             <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
       </div>
